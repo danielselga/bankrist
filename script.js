@@ -61,8 +61,8 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovements = (movements) => {
-  movements.forEach((mov, i) => {
+const displayMovements = (movements) => { 
+  movements.forEach((mov, i) => { // usa o for each para gerar varios htmls e usa a função inserAdjacentHTML para inserir esses htmls gerados dentro da pagina.
     const type = mov > 0 ? 'deposit' : 'withdrawal'
 
     const html = `
@@ -70,7 +70,7 @@ const displayMovements = (movements) => {
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
     <div class="movements__value">${mov}</div>
     </div>
-    `
+    ` // para gerar o html usamos o template literals para passar variaveis e manipular o html e depois disparamos a função para inserir esse html.
 
     containerMovements.insertAdjacentHTML('afterbegin', html)
 
