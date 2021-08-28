@@ -61,6 +61,23 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+const displayMovements = (movements) => {
+  movements.forEach((mov, i) => {
+    const type = mov > 0 ? 'deposit' : 'withdrawal'
+
+    const html = `
+    <div class="movements__row">
+    <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
+    <div class="movements__value">${mov}</div>
+    </div>
+    `
+
+    containerMovements.insertAdjacentHTML('afterbegin', html)
+
+  })
+}  
+displayMovements(account1.movements)
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -72,76 +89,5 @@ const currencies = new Map([
   ['GBP', 'Pound sterling'],
 ]);
 
-currencies.set('TESTE', '123')
-console.log(currencies)
-
-currencies.forEach(function(value, key, map) {
-  console.log(`${key}: ${value}`)
-})
-
-// Set
-const currenciesUnique = new Set (['USD', 'GBP', 'USD', 'EUR'])
-
-currenciesUnique.forEach(function(value, key, map) {
-  console.log(`${key}: ${value}`)
-})
-
-
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-
 /////////////////////////////////////////////////
-
-let arr = ['a', 'b', 'c', 'd', 'e']
-
-// // Slice
-// const slice = arr.slice(2, 4) // O metodo slice espera um index(number) como parametro e ele retorna um novo array sem os 2 primeiro valores nesse caso pois passamos 2 como index.
-// console.log(slice)
-// console.log(arr.slice(2)) //retorna um pedaço do array o segundo parametro é um end parameter.
-// console.log(arr.slice(-2)) // Return the last 2 elments
-// console.log(arr.slice(-4)) // return the last 4 elements
-// console.log(arr.slice(1, -2))
-
-// // Splice // Pretty similar but mutate the array.
-// console.log(arr.splice(2)) // retona o que foi retirado do array ele deleta do array tirado e retorna o que foi retirado.
-// console.log(arr.splice(-1)) // remove o ultimo parametro.
-// console.log(arr)
-// arr.splice(1, 2)
-
-// arr = ['a', 'b', 'c', 'd', 'e']
-
-// const arr2 = ['j', 'i', 'h', 'g', 'f']
-// console.log(arr2.reverse()) // mutate the array
-// console.log(arr2)
-
-// //Concat
-// const letters = arr.concat(arr2) //Doesent mutate
-// console.log(letters)  // Junta 2 array o primeiro é o que invoka e o segundo é o parametro.
-// console.log([...arr, ...arr2])
-
-// // Join 
-// console.log(letters.join('-')) // Retorna uma string com o - separando os valores do array.
-
-// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300]
-
-// for(const movement of movements) {
-//   if(movement > 0) {
-//     console.log(`You deposited ${movement}`)
-//   } else {
-//     console.log(`You witdraw ${Math.abs(movement)}`)
-//   }
-// }
-
-// console.log('---- FOR EACH -----')
-
-// movements.forEach(function(movement, i){
-//   if(movement > 0) {
-//     console.log(`You deposited ${i}: ${movement}`)
-//   } else {
-//     console.log(`You witdraw ${i}: ${Math.abs(movement)}`)
-//   }
-// })
-// // 0: function(200)
-// // 1: function(450)
-// // 2: function(400) ...
-
 
