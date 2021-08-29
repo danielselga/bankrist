@@ -78,13 +78,10 @@ const displayMovements = (movements) => {
     ` // para gerar o html usamos o template literals para passar variaveis e manipular o html e depois disparamos a função para inserir esse html.
 
     containerMovements.insertAdjacentHTML('afterbegin', html)
-
+    
   })
 }  
 
-displayMovements(account1.movements)
-
-//MAP
 const createUserNames = (users) => {
   users.forEach(accounts => {
     accounts.username = accounts.owner.toLowerCase().split(' ').map(name => name[0]).join('')
@@ -92,39 +89,48 @@ const createUserNames = (users) => {
 }
 
 createUserNames(accounts)
-console.log(accounts)
 
-//Filter
-const deposits = movements.filter(mov => {
-  return mov > 0
-})
-console.log(deposits)
+const calcDisplayBalance = movements => {
+  const balance = movements.reduce((acc, mov) => {
+   return acc + mov
+  }, 0)
+  labelBalance.textContent = `${balance} EUR`
+}
 
-const withdrawals = movements.filter(mov => {
-  return mov < 0
-})
-console.log(deposits)
-console.log(withdrawals)
+calcDisplayBalance(account1.movements)
 
-//Redulce
-console.log(movements)
 
-const balance = movements.reduce((acc, cur, i, arr) => { // Frist param is the acumulator. Is a snowboall who keep adding value. The second param is the initial value.
-  console.log(`iteration ${0}: ${acc}`)
-  return acc + cur
-}, 1000) //initial value.
 
-console.log(balance)
-
-///////////////////////////////////////////////// 
-/////////////////////////////////////////////////
-// LECTURES
-
-//map
+//MAP
 const currencies = new Map([
   ['USD', 'United States dollar'],
   ['EUR', 'Euro'],
   ['GBP', 'Pound sterling'],
 ]);
+
+///////////////////////////////////////////////// 
+/////////////////LECTURES////////////////////////
+/////////////////////////////////////////////////
+
+
+
+//Filter
+const deposits = movements.filter(mov => {
+  return mov > 0
+})
+
+
+const withdrawals = movements.filter(mov => {
+  return mov < 0
+})
+
+
+//Reduce
+
+const balance = movements.reduce((acc, cur, i, arr) => { // Frist param is the acumulator. Is a snowboall who keep adding value. The second param is the initial value.
+  return acc + cur
+}, 1000) //initial value.
+
+displayMovements(account1.movements)
 
 /////////////////////////////////////////////////
