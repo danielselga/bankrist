@@ -5,6 +5,8 @@
 // BANKIST APP
 
 // Data
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300]
+
 const account1 = {
   owner: 'Jonas Schmedtmann',
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
@@ -79,7 +81,30 @@ const displayMovements = (movements) => {
 
   })
 }  
+
 displayMovements(account1.movements)
+
+//MAP
+const createUserNames = (users) => {
+  users.forEach(accounts => {
+    accounts.username = accounts.owner.toLowerCase().split(' ').map(name => name[0]).join('')
+  })
+}
+
+createUserNames(accounts)
+console.log(accounts)
+
+//Filter
+const deposits = movements.filter(mov => {
+  return mov > 0
+})
+console.log(deposits)
+
+const withdrawals = movements.filter(mov => {
+  return mov < 0
+})
+console.log(deposits)
+console.log(withdrawals)
 
 ///////////////////////////////////////////////// 
 /////////////////////////////////////////////////
@@ -93,27 +118,3 @@ const currencies = new Map([
 ]);
 
 /////////////////////////////////////////////////
-
-// map 
-// Map retruns a new array containing the results of applying an operation on all original array elements.
-
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300]
-const euroToUsd = 1.1
-
-const movementsUSD = movements.map(mov => mov * euroToUsd)
-
-const movementsDescriptions = movements.map((mov, i, arr) =>
-`Movement ${i+1}: you ${mov > 0 ? 'deposited' : 'withdrew'} ${mov}` //ternary
-
-/*   if(mov > 0){
-  return `Movement ${i+1}: you deposited ${mov}`
-  }else{
-  return `Movement ${i+1}: You withdrew ${Math.abs(mov)}`
-  } */)
-
-console.log(movementsDescriptions)
-// filter
-// Filter returns a new array containing the array elements that passed a specifed test condition.
-
-//reduce
-// Reduce boils ("Reduces") all array elements down to one single value
