@@ -106,6 +106,16 @@ const withdrawals = movements.filter(mov => {
 console.log(deposits)
 console.log(withdrawals)
 
+//Redulce
+console.log(movements)
+
+const balance = movements.reduce((acc, cur, i, arr) => { // Frist param is the acumulator. Is a snowboall who keep adding value. The second param is the initial value.
+  console.log(`iteration ${0}: ${acc}`)
+  return acc + cur
+}, 1000) //initial value.
+
+console.log(balance)
+
 ///////////////////////////////////////////////// 
 /////////////////////////////////////////////////
 // LECTURES
