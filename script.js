@@ -133,4 +133,16 @@ const balance = movements.reduce((acc, cur, i, arr) => { // Frist param is the a
 
 displayMovements(account1.movements)
 
+console.log(balance)
+
+const max = movements.reduce((acc, mov) => {
+  if(acc > mov) {
+    return acc
+  } else {
+    return mov
+  }
+}, movements)
+
+console.log(max)
+
 /////////////////////////////////////////////////
