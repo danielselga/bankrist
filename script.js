@@ -66,14 +66,13 @@ const inputClosePin = document.querySelector('.form__input--pin');
 const displayMovements = (movements) => { 
   containerMovements.innerHTML = '' //inner html agrega um valor ao html.
 
-
   movements.forEach((mov, i) => { // usa o for each para gerar varios htmls e usa a função inserAdjacentHTML para inserir esses htmls gerados dentro da pagina.
     const type = mov > 0 ? 'deposit' : 'withdrawal'
 
     const html = `
     <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
-    <div class="movements__value">${mov}</div>
+    <div class="movements__value">${mov} EUR</div>
     </div>
     ` // para gerar o html usamos o template literals para passar variaveis e manipular o html e depois disparamos a função para inserir esse html.
 
@@ -99,7 +98,23 @@ const calcDisplayBalance = movements => {
 
 calcDisplayBalance(account1.movements)
 
+const calcDislaySummary = () => {
+  const incomes = movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov, 0)
+  labelSumIn.textContent = `${incomes} EUR`
 
+  const out = movements.filter(mov => mov < 0).reduce((acc, mov) => acc + mov, 0)
+  labelSumOut.textContent = `${Math.abs(out)} EUR`
+
+  const interest = movements.filter(mov => mov > 0).map(deposit => deposit * 1.2 / 100).filter((int, i , arr) => int >= 1).reduce((acc, int) => acc + int, 0)
+  labelSumInterest.textContent = `${interest} EUR`
+}
+ 
+calcDislaySummary(account1.movements)
+
+const eurToUsd = 1.1
+const totalDepositsUSD = movements.filter(mov => mov > 0).map(mov => mov * eurToUsd).reduce((acc, mov) => acc + mov, 0)
+
+console.log(totalDepositsUSD)
 
 //MAP
 const currencies = new Map([
@@ -107,12 +122,6 @@ const currencies = new Map([
   ['EUR', 'Euro'],
   ['GBP', 'Pound sterling'],
 ]);
-
-///////////////////////////////////////////////// 
-/////////////////LECTURES////////////////////////
-/////////////////////////////////////////////////
-
-
 
 //Filter
 const deposits = movements.filter(mov => {
