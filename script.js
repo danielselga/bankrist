@@ -96,8 +96,6 @@ const calcDisplayBalance = movements => {
   labelBalance.textContent = `${balance} EUR`
 }
 
-calcDisplayBalance(account1.movements)
-
 const calcDislaySummary = () => {
   const incomes = movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov, 0)
   labelSumIn.textContent = `${incomes} EUR`
@@ -109,21 +107,44 @@ const calcDislaySummary = () => {
   labelSumInterest.textContent = `${interest} EUR`
 }
  
-calcDislaySummary(account1.movements)
 
 const eurToUsd = 1.1
 const totalDepositsUSD = movements.filter(mov => mov > 0).map(mov => mov * eurToUsd).reduce((acc, mov) => acc + mov, 0)
 
 console.log(totalDepositsUSD)
 
-//MAP
 const currencies = new Map([
   ['USD', 'United States dollar'],
   ['EUR', 'Euro'],
   ['GBP', 'Pound sterling'],
 ]);
 
-//Filter
+let currentAccount;
+
+btnLogin.addEventListener('click', (e) => {
+  e.preventDefault()
+  
+  currentAccount = accounts.find(acc => acc.username === inputLoginUsername.value)
+  console.log(currentAccount)
+
+  if(currentAccount?.pin === Number (inputLoginPin.value)) {
+   // Display UI and Message
+    labelWelcome.textContent = `Welcome Back, ${currentAccount.owner.split(' ')[0]}`
+    containerApp.style.opacity = 100
+   //Display Movements
+   displayMovements(currentAccount.movements)
+   //Display Balance
+   calcDisplayBalance(currentAccount.movements)
+   //Display Sumary
+   calcDislaySummary(currentAccount.movements)
+
+  }
+})
+
+
+//MAP -> Loop inside the array like forEach but expect a callback wich will be the rule and all the elements will be afected by the rule.
+
+//Filter -> Expect a callback func wich contains the rule to really do a filter inside the array and return the values who match.
 const deposits = movements.filter(mov => {
   return mov > 0
 })
@@ -134,13 +155,13 @@ const withdrawals = movements.filter(mov => {
 })
 
 
-//Reduce
+//Reduce -> Acumulate all values expecting a callback wich can be passed the rule of the acumulating.
 
 const balance = movements.reduce((acc, cur, i, arr) => { // Frist param is the acumulator. Is a snowboall who keep adding value. The second param is the initial value.
   return acc + cur
 }, 1000) //initial value.
 
-displayMovements(account1.movements)
+
 
 console.log(balance)
 
@@ -154,4 +175,12 @@ const max = movements.reduce((acc, mov) => {
 
 console.log(max)
 
+//FIND -> Retrieve one element in the array based in one condition. Will return the frist element wich satisfy the condition. Doesent return one array. Can return one object, string or any value inside the array.
+const fristWithdrawal = movements.find(mov => mov < 0)
+console.log(movements)
+console.log(fristWithdrawal)
+
+console.log(accounts)
+const account = accounts.find( acc => acc.owner === 'Jessica Davis')
+console.log(account)
 /////////////////////////////////////////////////
