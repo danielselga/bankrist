@@ -89,21 +89,21 @@ const createUserNames = (users) => {
 
 createUserNames(accounts)
 
-const calcDisplayBalance = movements => {
-  const balance = movements.reduce((acc, mov) => {
+const calcDisplayBalance = acc => {
+  acc.balance = acc.movements.reduce((acc, mov) => {
    return acc + mov
   }, 0)
-  labelBalance.textContent = `${balance} EUR`
+  labelBalance.textContent = `${acc.balance} EUR`
 }
 
-const calcDislaySummary = () => {
-  const incomes = movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov, 0)
+const calcDislaySummary = (acc) => {
+  const incomes = acc.movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov, 0)
   labelSumIn.textContent = `${incomes} EUR`
 
-  const out = movements.filter(mov => mov < 0).reduce((acc, mov) => acc + mov, 0)
+  const out = acc.movements.filter(mov => mov < 0).reduce((acc, mov) => acc + mov, 0)
   labelSumOut.textContent = `${Math.abs(out)} EUR`
 
-  const interest = movements.filter(mov => mov > 0).map(deposit => deposit * 1.2 / 100).filter((int, i , arr) => int >= 1).reduce((acc, int) => acc + int, 0)
+  const interest = acc.movements.filter(mov => mov > 0).map(deposit => deposit * acc.interestRate / 100).filter((int, i , arr) => int >= 1).reduce((acc, int) => acc + int, 0)
   labelSumInterest.textContent = `${interest} EUR`
 }
  
@@ -119,6 +119,18 @@ const currencies = new Map([
   ['GBP', 'Pound sterling'],
 ]);
 
+const updateUi = (acc) => {
+     //Display Movements
+     displayMovements(acc.movements)
+
+     //Display Balance
+     calcDisplayBalance(acc)
+     
+     //Display Sumary
+     calcDislaySummary(acc)
+}
+
+
 let currentAccount;
 
 btnLogin.addEventListener('click', (e) => {
@@ -128,16 +140,30 @@ btnLogin.addEventListener('click', (e) => {
   console.log(currentAccount)
 
   if(currentAccount?.pin === Number (inputLoginPin.value)) {
-   // Display UI and Message
+   // Clear input fields
+   inputLoginUsername.value = inputLoginPin.value = ''
+   inputLoginPin.blur()
+   
+    // Display UI and Message
     labelWelcome.textContent = `Welcome Back, ${currentAccount.owner.split(' ')[0]}`
     containerApp.style.opacity = 100
-   //Display Movements
-   displayMovements(currentAccount.movements)
-   //Display Balance
-   calcDisplayBalance(currentAccount.movements)
-   //Display Sumary
-   calcDislaySummary(currentAccount.movements)
 
+    updateUi(currentAccount)
+  }
+})
+
+btnTransfer.addEventListener('click', (e) => {
+  e.preventDefault()
+  const amount = Number (inputTransferAmount.value)
+  const receiverAcc = accounts.find(acc => acc.username === inputTransferTo.value)
+  console.log(amount, receiverAcc)
+
+  if(amount > 0 && receiverAcc && currentAccount.balance >= amount && receiverAcc?.username !== currentAccount.username) {
+    currentAccount.movements.push(-amount)
+    receiverAcc.movements.push(amount)
+    updateUi(currentAccount)
+    inputTransferTo.value = ''
+    inputTransferAmount.value = ''
   }
 })
 
@@ -184,3 +210,5 @@ console.log(accounts)
 const account = accounts.find( acc => acc.owner === 'Jessica Davis')
 console.log(account)
 /////////////////////////////////////////////////
+
+// Quando passamos um objeto como parametro e damos reasign value nele ele vai trocar na raiz do objeto asism conseguimos armazenas e alterar os objetos dentro das funções.
