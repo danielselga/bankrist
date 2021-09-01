@@ -63,10 +63,12 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovements = (movements) => { 
+const displayMovements = (movements, sort = false) => { 
   containerMovements.innerHTML = '' //inner html agrega um valor ao html.
 
-  movements.forEach((mov, i) => { // usa o for each para gerar varios htmls e usa a função inserAdjacentHTML para inserir esses htmls gerados dentro da pagina.
+  const movs = sort ? movements.slice().sort((a,b) => a - b) : movements
+
+  movs.forEach((mov, i) => { // usa o for each para gerar varios htmls e usa a função inserAdjacentHTML para inserir esses htmls gerados dentro da pagina.
     const type = mov > 0 ? 'deposit' : 'withdrawal'
 
     const html = `
@@ -167,6 +169,19 @@ btnTransfer.addEventListener('click', (e) => {
   }
 })
 
+btnLoan.addEventListener('click', function(e) {
+  e.preventDefault()
+  
+  const amount = Number(inputLoanAmount.value)
+
+  if(amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    // Add movement
+    currentAccount.movements.push(amount)
+    updateUi(currentAccount)
+  }
+  inputLoanAmount.value = ''
+})
+
 btnClose.addEventListener('click', (e) => {
   e.preventDefault()
   if(inputCloseUsername.value === currentAccount.username && Number(inputClosePin.value) === currentAccount.pin) {
@@ -177,6 +192,14 @@ btnClose.addEventListener('click', (e) => {
   }
   inputClosePin.value = ''
   inputCloseUsername.value = ''
+})
+
+let sorted = false
+
+btnSort.addEventListener('click', (e) => {
+  e.preventDefault()
+  displayMovements(currentAccount.movements, !sorted)
+  sorted = !sorted //flipa a variavel sorted lá fora.
 })
 
 
@@ -225,9 +248,84 @@ console.log(account)
 
 // Quando passamos um objeto como parametro e damos reasign value nele ele vai trocar na raiz do objeto asism conseguimos armazenas e alterar os objetos dentro das funções.
 
-// Some and every
+// Some Method
 console.log(movements)
-console.log(movements.includes(-130))
+console.log(movements.includes(-130)) //Check equality
 
-const anyDeposits = movements.some(mov => mov > 5000)
+const anyDepositsEquality = movements.some(mov => mov === -130) // Check equality but we can specify condition
+console.log(anyDepositsEquality)
+
+const anyDeposits = movements.some(mov => mov > 5000) // Check equality but we can specify condition, return a boolean.
 console.log(anyDeposits)
+
+// Every Method
+console.log(account4.movements.every(mov => mov > 0)) // Every only will return if the all values correspond the condition.
+
+//Flat
+const arr = [[1,2,3], [4,5,6], 7 ,8]
+
+console.log(arr.flat()) // return a full array and remove the nested array.
+
+const arrDeep = [[[1,2],3], [4,[5,6]], 7 ,8]
+console.log(arrDeep.flat(2)) //The param é a camada que ele vai deeper, 1 uma camada de nesting 2 duas camadas de nesting arrays.
+
+// const acountMovements = accounts.map(acc => acc.movements)
+// console.log(acountMovements)
+// const allMovements = acountMovements.flat()
+// console.log(allMovements)
+// const overallBalance = allMovements.reduce((acc, mov) => acc + mov, 0)
+// console.log(overallBalance)
+
+//Chaining
+const overallBalance = accounts.map(acc => acc.movements).flat().reduce((acc, mov) => acc + mov, 0)
+console.log(overallBalance)
+
+//FlatMap
+//FlatMap combines a map and the flat method is better for perfomance.
+const overallBalance2 = accounts.flatMap(acc => acc.movements).reduce((acc, mov) => acc + mov, 0)
+console.log(overallBalance2)
+
+//Sorting Arrays
+
+//Strings
+const owners = ['Jonas', 'Zack', 'Adam', 'Martha']
+console.log(owners.sort()) //Organiza o Array e muta o array atual
+console.log(owners)
+
+// Numbers
+console.log(movements)
+// console.log(movements.sort()) //Não organiza os numeros by default só arrays, ele converte os numeros em arrays e ordenas eles, basicamente ele ordena levando em consideração a primeira letra.
+
+// return < 0, A, B (keep order    )
+// return > 0 B, A (switch order)
+
+//Ascending
+// movements.sort((a, b) => { //A o valor atual e b o proximo valor.
+//   if(a > b) {
+//     return 1
+//   }
+
+//   if(b < a) {
+//     return -1
+//   }
+// })
+
+movements.sort((a,b) => a-b)
+console.log(movements)
+
+//Descending
+// movements.sort((a, b) => { //A o valor atual e b o proximo valor.
+  // if(b > a) {
+    // return -1
+  // }
+// 
+  // if(a < b) {
+    // return 1
+  // }
+// 
+// })
+
+movements.sort((a,b) => b-a)
+
+console.log(movements)
+
