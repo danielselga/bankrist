@@ -167,6 +167,18 @@ btnTransfer.addEventListener('click', (e) => {
   }
 })
 
+btnClose.addEventListener('click', (e) => {
+  e.preventDefault()
+  if(inputCloseUsername.value === currentAccount.username && Number(inputClosePin.value) === currentAccount.pin) {
+    console.log('dispara')
+    const index = accounts.findIndex(acc => acc.username === currentAccount.username) //return a single value wich mach inside the array and return the index of this array.
+    accounts.splice(index, 1)
+    containerApp.style.opacity = 0
+  }
+  inputClosePin.value = ''
+  inputCloseUsername.value = ''
+})
+
 
 //MAP -> Loop inside the array like forEach but expect a callback wich will be the rule and all the elements will be afected by the rule.
 
@@ -187,7 +199,7 @@ const balance = movements.reduce((acc, cur, i, arr) => { // Frist param is the a
   return acc + cur
 }, 1000) //initial value.
 
-
+ 
 
 console.log(balance)
 
@@ -212,3 +224,10 @@ console.log(account)
 /////////////////////////////////////////////////
 
 // Quando passamos um objeto como parametro e damos reasign value nele ele vai trocar na raiz do objeto asism conseguimos armazenas e alterar os objetos dentro das funções.
+
+// Some and every
+console.log(movements)
+console.log(movements.includes(-130))
+
+const anyDeposits = movements.some(mov => mov > 5000)
+console.log(anyDeposits)
