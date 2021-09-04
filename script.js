@@ -74,7 +74,7 @@ const displayMovements = (movements, sort = false) => {
     const html = `
     <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
-    <div class="movements__value">${mov} EUR</div>
+    <div class="movements__value">${mov.toFixed(2)} EUR</div>
     </div>
     ` // para gerar o html usamos o template literals para passar variaveis e manipular o html e depois disparamos a função para inserir esse html.
 
@@ -172,7 +172,7 @@ btnTransfer.addEventListener('click', (e) => {
 btnLoan.addEventListener('click', function(e) {
   e.preventDefault()
   
-  const amount = Number(inputLoanAmount.value)
+  const amount = Math.floor(inputLoanAmount.value)
 
   if(amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // Add movement
@@ -392,6 +392,30 @@ console.log((2.7).toFixed(0))
 console.log((2.7).toFixed(3))
 console.log((2.345).toFixed(2))
 
+// Remainder operator
+console.log(5 % 2) //Retorna o resto da operação.
+console.log(5/2) // 5 = 2 * 2 + 1 -> 1 e o reminder.
+
+console.log(8%3)
+console.log(8/3) // 8 * 3 + 2 -> 2 é o reminder.
+
+console.log(6 % 2) // = 0
+console.log(7 % 2) // 1
+
+const isEven = n => n % 2 === 0
+console.log(isEven(8))
+console.log(isEven(23))
+console.log(isEven(514));
 
 
 
+labelBalance.addEventListener('click', () => {
+  [...document.querySelectorAll('.movements__row')].forEach((row, i) => {
+    if (i % 2 === 0) {
+      row.style.backgroundColor = 'orangered'
+    }
+    if(i % 3 === 0) {
+      row.style.backgroundColor = 'blue'
+    }
+  })
+})
