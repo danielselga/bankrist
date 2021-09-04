@@ -329,3 +329,69 @@ movements.sort((a,b) => b-a)
 
 console.log(movements)
 
+/////////////////////// Numbers ////
+
+console.log(23 === 23.0) // integers and reals are the same.
+
+console.log(0.1 + 0.2)
+console.log(0.1 + 0.2 === 0.3)
+
+//Conversion
+console.log(Number('23'))
+console.log(typeof +'23')
+
+//Parsing
+console.log(Number.parseInt('30px')) // will return 30, Int is for integers
+console.log(Number.parseInt('e30px')) //parsing need to start with a number
+
+console.log(Number.parseFloat('2.5rem')) //Float is for float numbers
+
+console.log(Number.isNaN('20'))  //isNaN return true if is NaN
+
+console.log(Number.isNaN(+'20X'))
+
+console.log(Number.isNaN(23/0))
+ 
+console.log(isFinite(23))
+
+console.log(Math.sqrt(25)) //Raiz quadrada
+console.log(25 ** (1/2))
+console.log(8 ** (1/3)) //Raiz cubica
+
+console.log(Math.max(5,18,23,11,2)) //Vai ternonar o maior valor passado na função.
+console.log(Math.max(5,18,'23',11,2))
+
+console.log(Math.min(5,18,'23',11,2)) //Vai ternonar o menor valor passado na função.
+
+console.log(Math.PI * Number.parseFloat('10px') ** 2) //Calculando o raio.
+
+console.log(Math.trunc(Math.random() * 6) + 1)
+
+const randomInt = (min, max) => {
+  return Math.floor(Math.random() * (max - min) + 1) + min
+}
+
+console.log(randomInt(10, 20))
+
+//Math Round
+console.log(Math.round(23.3)) //Aredonda para o mais proximo
+console.log(Math.round(23.5)) //Arredonda para o mais proximo
+
+//Math Ceil
+console.log(Math.ceil(23.3)) //Arredonda parar cima.
+console.log(Math.ceil(23.9))
+
+//Math floor
+console.log(Math.floor(23.3)) //Arredonda parar baixo.
+console.log(Math.floor(23.9)) 
+
+console.log(Math.floor(-23.3)) //retorna 24 pois é negativo e -24 é menor que -23
+
+//Rounding Decimals
+console.log((2.7).toFixed(0))
+console.log((2.7).toFixed(3))
+console.log((2.345).toFixed(2))
+
+
+
+
