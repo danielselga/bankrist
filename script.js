@@ -4,6 +4,8 @@
 /////////////////////////////////////////////////
 // BANKIST APP
 
+
+
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300]
 // Data
 const account1 = {
@@ -112,13 +114,13 @@ const calcDisplayBalance = acc => {
 
 const calcDislaySummary = (acc) => {
   const incomes = acc.movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov, 0)
-  labelSumIn.textContent = `${incomes} EUR`
+  labelSumIn.textContent = `${incomes.toFixed(2)} EUR`
 
   const out = acc.movements.filter(mov => mov < 0).reduce((acc, mov) => acc + mov, 0)
-  labelSumOut.textContent = `${Math.abs(out)} EUR`
+  labelSumOut.textContent = `${Math.abs(out.toFixed(2))} EUR`
 
   const interest = acc.movements.filter(mov => mov > 0).map(deposit => deposit * acc.interestRate / 100).filter((int, i , arr) => int >= 1).reduce((acc, int) => acc + int, 0)
-  labelSumInterest.textContent = `${interest} EUR`
+  labelSumInterest.textContent = `${interest.toFixed(2)} EUR`
 }
  
 
@@ -146,6 +148,25 @@ const updateUi = (acc) => {
 
 
 let currentAccount;
+
+//FAKED AWAYS LOGGED IN
+currentAccount = account1
+updateUi(currentAccount)
+containerApp.style.opacity = 100;
+
+const now = new Date()
+const day = `${now.getDate()}`.padStart(2, 0)
+const month = `${now.getMonth() + 1}`.padStart(2, 0)
+const year = now.getFullYear()
+const hour = now.getHours()
+const min = now.getMinutes()
+console.log(year)
+labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`
+
+// day/month/year
+
+
+
 
 btnLogin.addEventListener('click', (e) => {
   e.preventDefault()
@@ -441,36 +462,35 @@ labelBalance.addEventListener('click', () => {
  console.log(10000n + 10000n)
 
 
- //Create a date
-const now = new Date
-console.log(now)
-console.log(new Date('Aug 02 2020 18:05:41'))
-console.log(new Date('December 24, 2015'))
+//  //Create a date
 
-console.log(new Date(account1.movementsDates[0]))
+// console.log(new Date('Aug 02 2020 18:05:41'))
+// console.log(new Date('December 24, 2015'))
 
-console.log(new Date(2037, 10, 19, 15, 23, 5)) //10 will return november but november is the 11 moth this happens becouse month in js are 0 based
-console.log(new Date(2037, 10, 33)) // will correct to dec 3th
+// console.log(new Date(account1.movementsDates[0]))
 
-console.log(new Date(0)) //Unix timestamp 
-console.log(new Date(3 * 24 * 60 * 60 * 1000)) //will return day 3 and this calculation is the timestamp
+// console.log(new Date(2037, 10, 19, 15, 23, 5)) //10 will return november but november is the 11 moth this happens becouse month in js are 0 based
+// console.log(new Date(2037, 10, 33)) // will correct to dec 3th
 
-//Working with dates
-const future = new Date(2037, 10, 19, 15, 23)
-console.log(future)
-console.log(future.getFullYear()) //will return the year
-console.log(future.getMonth()) //will return the month but zero based
-console.log(future.getDate()) //will return the date
-console.log(future.getDay()) //will return the position in the day heare is 4 considering sunday is 0
-console.log(future.getHours())
-console.log(future.getMinutes())
-console.log(future.getSeconds())
-console.log(future.toISOString()) //retorna o padrão global de tempo
+// console.log(new Date(0)) //Unix timestamp 
+// console.log(new Date(3 * 24 * 60 * 60 * 1000)) //will return day 3 and this calculation is the timestamp
 
-console.log(future.getTime()) //timestamp
-console.log(new Date(2142267780000))
+// //Working with dates
+// const future = new Date(2037, 10, 19, 15, 23)
+// console.log(future)
+// console.log(future.getFullYear()) //will return the year
+// console.log(future.getMonth()) //will return the month but zero based
+// console.log(future.getDate()) //will return the date
+// console.log(future.getDay()) //will return the position in the day heare is 4 considering sunday is 0
+// console.log(future.getHours())
+// console.log(future.getMinutes())
+// console.log(future.getSeconds())
+// console.log(future.toISOString()) //retorna o padrão global de tempo
 
-console.log(Date.now()) // return the now timestamp
+// console.log(future.getTime()) //timestamp
+// console.log(new Date(2142267780000))
 
-future.setFullYear(2040) //Will switch the year for 2024
-console.log(future)
+// console.log(Date.now()) // return the now timestamp
+
+// future.setFullYear(2040) //Will switch the year for 2024
+// console.log(future)
