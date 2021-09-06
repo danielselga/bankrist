@@ -4,14 +4,26 @@
 /////////////////////////////////////////////////
 // BANKIST APP
 
-// Data
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300]
-
+// Data
 const account1 = {
   owner: 'Jonas Schmedtmann',
-  movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
+  movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
   interestRate: 1.2, // %
   pin: 1111,
+
+  movementsDates: [
+    '2019-11-18T21:31:17.178Z',
+    '2019-12-23T07:42:02.383Z',
+    '2020-01-28T09:15:04.904Z',
+    '2020-04-01T10:17:24.185Z',
+    '2020-05-08T14:11:59.604Z',
+    '2020-05-27T17:01:17.194Z',
+    '2020-07-11T23:36:17.929Z',
+    '2020-07-12T10:51:36.790Z',
+  ],
+  currency: 'EUR',
+  locale: 'pt-PT', // de-DE
 };
 
 const account2 = {
@@ -19,23 +31,23 @@ const account2 = {
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
+
+  movementsDates: [
+    '2019-11-01T13:15:33.035Z',
+    '2019-11-30T09:48:16.867Z',
+    '2019-12-25T06:04:23.907Z',
+    '2020-01-25T14:18:46.235Z',
+    '2020-02-05T16:33:06.386Z',
+    '2020-04-10T14:43:26.374Z',
+    '2020-06-25T18:49:59.371Z',
+    '2020-07-26T12:01:20.894Z',
+  ],
+  currency: 'USD',
+  locale: 'en-US',
 };
 
-const account3 = {
-  owner: 'Steven Thomas Williams',
-  movements: [200, -200, 340, -300, -20, 50, 400, -460],
-  interestRate: 0.7,
-  pin: 3333,
-};
+const accounts = [account1, account2];
 
-const account4 = {
-  owner: 'Sarah Smith',
-  movements: [430, 1000, 700, 50, 90],
-  interestRate: 1,
-  pin: 4444,
-};
-
-const accounts = [account1, account2, account3, account4];
 
 // Elements
 const labelWelcome = document.querySelector('.welcome');
@@ -259,7 +271,7 @@ const anyDeposits = movements.some(mov => mov > 5000) // Check equality but we c
 console.log(anyDeposits)
 
 // Every Method
-console.log(account4.movements.every(mov => mov > 0)) // Every only will return if the all values correspond the condition.
+console.log(account2.movements.every(mov => mov > 0)) // Every only will return if the all values correspond the condition.
 
 //Flat
 const arr = [[1,2,3], [4,5,6], 7 ,8]
@@ -419,3 +431,34 @@ labelBalance.addEventListener('click', () => {
     }
   })
 })
+
+//Big int -> primitive value.
+ console.log(45561651561561651651616516516502312316n) //BIg int representado usando o N no final do numero
+
+ console.log(BigInt(45561651561561651651616516516502312316n))
+
+ //Operations 
+ console.log(10000n + 10000n)
+
+
+ //Create a date
+const now = new Date
+console.log(now)
+console.log(new Date('Aug 02 2020 18:05:41'))
+console.log(new Date('December 24, 2015'))
+
+console.log(new Date(account1.movementsDates[0]))
+
+console.log(new Date(2037, 10, 19, 15, 23, 5)) //10 will return november but november is the 11 moth this happens becouse month in js are 0 based
+console.log(new Date(2037, 10, 33)) // will correct to dec 3th
+
+console.log(new Date(0)) //Unix timestamp 
+console.log(new Date(3 * 24 * 60 * 60 * 1000)) //will return day 3 and this calculation is the timestamp
+
+//Working with dates
+const future = new Date(2037, 10, 19, 15, 23)
+console.log(future)
+console.log(future.getFullYear()) //will return the year
+console.log(future.getMonth()) //will return the month but zero based
+console.log(future.getDate()) //will return the date
+console.log(future.getDay()) //will return the position in the day heare is 4 considering sunday is 0
