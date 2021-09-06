@@ -462,3 +462,15 @@ console.log(future.getFullYear()) //will return the year
 console.log(future.getMonth()) //will return the month but zero based
 console.log(future.getDate()) //will return the date
 console.log(future.getDay()) //will return the position in the day heare is 4 considering sunday is 0
+console.log(future.getHours())
+console.log(future.getMinutes())
+console.log(future.getSeconds())
+console.log(future.toISOString()) //retorna o padrão global de tempo
+
+console.log(future.getTime()) //timestamp
+console.log(new Date(2142267780000))
+
+console.log(Date.now()) // return the now timestamp
+
+future.setFullYear(2040) //Will switch the year for 2024
+console.log(future)
