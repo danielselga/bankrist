@@ -219,16 +219,18 @@ const startLogOutTimer = () => {
 }
 
 // Set time to 5 minutes
-  let time = 10
+  let time = 120
   
   //Call every second
   tick()
   const timer = setInterval(tick, 1000)
+  
+  return timer
 }
 
 
 
-let currentAccount;
+let currentAccount, timer;
 
 //FAKED AWAYS LOGGED IN
 // currentAccount = account1
@@ -284,7 +286,12 @@ btnLogin.addEventListener('click', (e) => {
     labelWelcome.textContent = `Welcome Back, ${currentAccount.owner.split(' ')[0]}`
     containerApp.style.opacity = 100
 
-    startLogOutTimer()
+    //timer
+    if(timer) {
+      clearInterval(timer)
+    }
+    timer = startLogOutTimer()
+    
     updateUi(currentAccount)
   }
 })
@@ -306,6 +313,9 @@ btnTransfer.addEventListener('click', (e) => {
     updateUi(currentAccount)
     inputTransferTo.value = ''
     inputTransferAmount.value = ''
+
+    clearInterval(timer)
+    timer = startLogOutTimer()
   }
 })
 
@@ -321,6 +331,9 @@ btnLoan.addEventListener('click', function(e) {
     
     currentAccount.movements.push(amount)
     updateUi(currentAccount)
+
+    clearInterval(timer)
+    timer = startLogOutTimer()
   }
   inputLoanAmount.value = ''
 })
