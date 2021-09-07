@@ -15,14 +15,14 @@ const account1 = {
   pin: 1111,
 
   movementsDates: [
-    '2019-11-18T21:31:17.178Z',
-    '2019-12-23T07:42:02.383Z',
-    '2020-01-28T09:15:04.904Z',
-    '2020-04-01T10:17:24.185Z',
-    '2020-05-08T14:11:59.604Z',
-    '2020-05-27T17:01:17.194Z',
-    '2020-07-11T23:36:17.929Z',
-    '2020-07-12T10:51:36.790Z',
+    '2021-09-06T21:31:17.178Z',
+    '2021-09-04T07:42:02.383Z',
+    '2021-01-28T09:15:04.904Z',
+    '2021-04-01T10:17:24.185Z',
+    '2021-05-08T14:11:59.604Z',
+    '2021-05-27T17:01:17.194Z',
+    '2021-07-11T23:36:17.929Z',
+    '2021-07-12T10:51:36.790Z',
   ],
   currency: 'EUR',
   locale: 'pt-PT', // de-DE
@@ -77,17 +77,49 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovements = (movements, sort = false) => { 
+//Functions 
+
+const formatMovementDate = (date) => {
+  
+  const calcDaysPassed = (date1, date2) => {
+   return Math.round(Math.abs(date1 - date2) / (1000 * 60 * 60 * 24))
+  }
+
+  const daysPassed = calcDaysPassed(new Date(), date)
+  console.log(daysPassed)
+
+  if(daysPassed === 0) {
+    return 'Today'
+  } else if (daysPassed === 1) {
+    return 'Yesterday'
+  } else if (daysPassed <= 7) {
+    return `${daysPassed} days ago`
+  } else {
+    const day = `${date.getDate()}`.padStart(2, 0)
+    const month = `${date.getMonth() + 1}`.padStart(2, 0)
+    const year = date.getFullYear()
+    return `${day}/${month}/${year}`
+  } 
+  
+}
+
+const displayMovements = (acc, sort = false) => { 
   containerMovements.innerHTML = '' //inner html agrega um valor ao html.
 
-  const movs = sort ? movements.slice().sort((a,b) => a - b) : movements
+  const movs = sort 
+  ? acc.movements.slice().sort((a,b) => a - b) 
+  : acc.movements
 
   movs.forEach((mov, i) => { // usa o for each para gerar varios htmls e usa a função inserAdjacentHTML para inserir esses htmls gerados dentro da pagina.
     const type = mov > 0 ? 'deposit' : 'withdrawal'
 
+    const date = new Date(acc.movementsDates[i])
+    const displayDate = formatMovementDate(date)
+
     const html = `
     <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
+    <div class="movements__date">${displayDate}</div>
     <div class="movements__value">${mov.toFixed(2)} EUR</div>
     </div>
     ` // para gerar o html usamos o template literals para passar variaveis e manipular o html e depois disparamos a função para inserir esse html.
@@ -137,7 +169,7 @@ const currencies = new Map([
 
 const updateUi = (acc) => {
      //Display Movements
-     displayMovements(acc.movements)
+     displayMovements(acc)
 
      //Display Balance
      calcDisplayBalance(acc)
@@ -154,18 +186,9 @@ currentAccount = account1
 updateUi(currentAccount)
 containerApp.style.opacity = 100;
 
-const now = new Date()
-const day = `${now.getDate()}`.padStart(2, 0)
-const month = `${now.getMonth() + 1}`.padStart(2, 0)
-const year = now.getFullYear()
-const hour = now.getHours()
-const min = now.getMinutes()
-console.log(year)
-labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`
+
 
 // day/month/year
-
-
 
 
 btnLogin.addEventListener('click', (e) => {
@@ -175,7 +198,19 @@ btnLogin.addEventListener('click', (e) => {
   console.log(currentAccount)
 
   if(currentAccount?.pin === Number (inputLoginPin.value)) {
-   // Clear input fields
+   
+    //Create current date and time
+   
+    const now = new Date()
+    const day = `${now.getDate()}`.padStart(2, 0)
+    const month = `${now.getMonth() + 1}`.padStart(2, 0)
+    const year = now.getFullYear()
+    const hour = `${now.getHours()}`.padStart(2, 0)
+    const min = `${now.getMinutes()}`.padStart(2, 0)
+    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`
+   
+   
+    // Clear input fields
    inputLoginUsername.value = inputLoginPin.value = ''
    inputLoginPin.blur()
    
@@ -196,6 +231,11 @@ btnTransfer.addEventListener('click', (e) => {
   if(amount > 0 && receiverAcc && currentAccount.balance >= amount && receiverAcc?.username !== currentAccount.username) {
     currentAccount.movements.push(-amount)
     receiverAcc.movements.push(amount)
+    
+    //Add transfer date
+    currentAccount.movementsDates.push(new Date().toISOString())
+    receiverAcc.movementsDates.push(new Date().toISOString())
+
     updateUi(currentAccount)
     inputTransferTo.value = ''
     inputTransferAmount.value = ''
@@ -208,7 +248,10 @@ btnLoan.addEventListener('click', function(e) {
   const amount = Math.floor(inputLoanAmount.value)
 
   if(amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    // Add movement
+
+    //Add loan date
+    currentAccount.movementsDates.push(new Date().toISOString())
+    
     currentAccount.movements.push(amount)
     updateUi(currentAccount)
   }
