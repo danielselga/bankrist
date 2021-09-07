@@ -79,7 +79,7 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 //Functions 
 
-const formatMovementDate = (date) => {
+const formatMovementDate = (date, locale) => {
   
   const calcDaysPassed = (date1, date2) => {
    return Math.round(Math.abs(date1 - date2) / (1000 * 60 * 60 * 24))
@@ -95,13 +95,24 @@ const formatMovementDate = (date) => {
   } else if (daysPassed <= 7) {
     return `${daysPassed} days ago`
   } else {
-    const day = `${date.getDate()}`.padStart(2, 0)
-    const month = `${date.getMonth() + 1}`.padStart(2, 0)
-    const year = date.getFullYear()
-    return `${day}/${month}/${year}`
+    // const day = `${date.getDate()}`.padStart(2, 0)
+    // const month = `${date.getMonth() + 1}`.padStart(2, 0)
+    // const year = date.getFullYear()
+    // return `${day}/${month}/${year}`
+
+    return new Intl.DateTimeFormat(locale).format(date)
   } 
   
 }
+
+//Format Currency global func
+const formatCur = (value, locale, currency) => {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency
+  }).format(value) 
+}
+
 
 const displayMovements = (acc, sort = false) => { 
   containerMovements.innerHTML = '' //inner html agrega um valor ao html.
@@ -114,13 +125,20 @@ const displayMovements = (acc, sort = false) => {
     const type = mov > 0 ? 'deposit' : 'withdrawal'
 
     const date = new Date(acc.movementsDates[i])
-    const displayDate = formatMovementDate(date)
+    
+    const displayDate = formatMovementDate(date, acc.locale)
+    
+    const formattedMov = new Intl.NumberFormat(acc.locale, {
+      style: 'currency',
+      currency: `${acc.currency}`
+    }).format(mov) 
+
 
     const html = `
     <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
     <div class="movements__date">${displayDate}</div>
-    <div class="movements__value">${mov.toFixed(2)} EUR</div>
+    <div class="movements__value">${formattedMov}</div>
     </div>
     ` // para gerar o html usamos o template literals para passar variaveis e manipular o html e depois disparamos a função para inserir esse html.
 
@@ -141,18 +159,19 @@ const calcDisplayBalance = acc => {
   acc.balance = acc.movements.reduce((acc, mov) => {
    return acc + mov
   }, 0)
-  labelBalance.textContent = `${acc.balance} EUR`
+
+  labelBalance.textContent = `${formatCur(acc.balance, acc.locale, acc.currency)}`
 }
 
 const calcDislaySummary = (acc) => {
   const incomes = acc.movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov, 0)
-  labelSumIn.textContent = `${incomes.toFixed(2)} EUR`
+  labelSumIn.textContent = `${formatCur(incomes, acc.locale, acc.currency)}`
 
   const out = acc.movements.filter(mov => mov < 0).reduce((acc, mov) => acc + mov, 0)
-  labelSumOut.textContent = `${Math.abs(out.toFixed(2))} EUR`
+  labelSumOut.textContent = `${formatCur(incomes, acc.locale, acc.currency)}`
 
   const interest = acc.movements.filter(mov => mov > 0).map(deposit => deposit * acc.interestRate / 100).filter((int, i , arr) => int >= 1).reduce((acc, int) => acc + int, 0)
-  labelSumInterest.textContent = `${interest.toFixed(2)} EUR`
+  labelSumInterest.textContent = `${formatCur(interest, acc.locale, acc.currency)}`
 }
  
 
@@ -178,17 +197,48 @@ const updateUi = (acc) => {
      calcDislaySummary(acc)
 }
 
+const startLogOutTimer = () => {
+  
+  const tick = () => {
+  const min = String(Math.trunc(time / 60)).padStart(2, 0)
+  const sec = time % 60
+
+  //In each call print the remaining time to ui
+  labelTimer.textContent = `${min}:${sec}`
+
+  
+  //When 0 seconds, stop timer and logout user
+  if(time === 0) {
+    clearInterval(timer) // this function Will stop the timer
+    labelWelcome.textContent = 'LogIn to get Started'
+    containerApp.style.opacity = 0
+  }
+
+  //decrease 1s
+  time--
+}
+
+// Set time to 5 minutes
+  let time = 10
+  
+  //Call every second
+  tick()
+  const timer = setInterval(tick, 1000)
+}
+
+
 
 let currentAccount;
 
 //FAKED AWAYS LOGGED IN
-currentAccount = account1
-updateUi(currentAccount)
-containerApp.style.opacity = 100;
+// currentAccount = account1
+// updateUi(currentAccount)
+// containerApp.style.opacity = 100;
 
 
 
-// day/month/year
+// Experimenting with the API
+
 
 
 btnLogin.addEventListener('click', (e) => {
@@ -202,12 +252,28 @@ btnLogin.addEventListener('click', (e) => {
     //Create current date and time
    
     const now = new Date()
-    const day = `${now.getDate()}`.padStart(2, 0)
-    const month = `${now.getMonth() + 1}`.padStart(2, 0)
-    const year = now.getFullYear()
-    const hour = `${now.getHours()}`.padStart(2, 0)
-    const min = `${now.getMinutes()}`.padStart(2, 0)
-    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`
+
+    const options  = {
+      hour: 'numeric',
+      minute: 'numeric',
+      day: 'numeric',
+      month: 'numeric', //numeric, 2-digit
+      year: 'numeric',
+      // weekday: 'long' //short 
+    }
+    
+    // const local = navigator.language //browser local
+    
+    const local = currentAccount.locale
+
+    labelDate.textContent = new Intl.DateTimeFormat(local, options).format(now)
+    
+    // const day = `${now.getDate()}`.padStart(2, 0)
+    // const month = `${now.getMonth() + 1}`.padStart(2, 0)
+    // const year = now.getFullYear()
+    // const hour = `${now.getHours()}`.padStart(2, 0)
+    // const min = `${now.getMinutes()}`.padStart(2, 0)
+    // labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`
    
    
     // Clear input fields
@@ -218,6 +284,7 @@ btnLogin.addEventListener('click', (e) => {
     labelWelcome.textContent = `Welcome Back, ${currentAccount.owner.split(' ')[0]}`
     containerApp.style.opacity = 100
 
+    startLogOutTimer()
     updateUi(currentAccount)
   }
 })
@@ -537,3 +604,7 @@ labelBalance.addEventListener('click', () => {
 
 // future.setFullYear(2040) //Will switch the year for 2024
 // console.log(future)
+
+setTimeout(() => {
+  console.log('Heare is your pizza!')
+}, 5000);
